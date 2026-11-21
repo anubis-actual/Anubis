@@ -2,9 +2,9 @@
 
 Anubis is a free Android app for the **DG-Lab Coyote 3** e-stim unit and **Pawprints** wireless buttons. It puts clear controls, live readouts and hard safety limits in front of you, with a big STOP that is always on screen.
 
-**Current release: v5.2** · version 5.2 (101) · Android 8.0 (API 26) or newer · Bluetooth LE
+**Current release: v5.3** · version 5.3 (102) · Android 8.0 (API 26) or newer · Bluetooth LE
 
-[**Download Anubis v5.2 (APK)**](https://github.com/anubis-actual/Anubis/releases/tag/v5.2) · [Website](https://anubis-actual.github.io/Anubis/) · [Overview deck (PDF)](docs/deck/Anubis-Overview-v5.2.pdf) · [Overview deck (PPTX)](docs/deck/Anubis-Overview-v5.2.pptx)
+[**Download Anubis v5.3 (APK)**](https://github.com/anubis-actual/Anubis/releases/tag/v5.3) · [Website](https://anubis-actual.github.io/Anubis/) · [Overview deck (PDF)](docs/deck/Anubis-Overview-v5.2.pdf) · [Overview deck (PPTX)](docs/deck/Anubis-Overview-v5.2.pptx)
 
 > Anubis is an independent project. It is **not affiliated with, endorsed by, or supported by DG-Lab**. "DG-Lab", "Coyote" and "Pawprints" are names of their respective owners and are used only to describe compatibility.
 
@@ -29,25 +29,25 @@ See the [overview deck](docs/deck/Anubis-Overview-v5.2.pdf) for screenshots and 
 
 Anubis is distributed as an APK on GitHub Releases, not through the Play Store.
 
-1. Open the [v5.2 release](https://github.com/anubis-actual/Anubis/releases/tag/v5.2) on your Android phone and download `Anubis-v5.2-release.apk`.
+1. Open the [v5.3 release](https://github.com/anubis-actual/Anubis/releases/tag/v5.3) on your Android phone and download `Anubis-v5.3-release.apk`.
 2. **Verify the file** (recommended). Checksums are in the [Verify](#verify) section below.
 3. **Allow installs from this source.** When you open the APK, Android asks for permission to install unknown apps from your browser or file manager. Allow it for that app (Settings → Apps → Special app access → Install unknown apps).
 4. Tap **Install**, then open Anubis. You can turn the "install unknown apps" permission back off afterwards.
-5. On first launch, read and accept the safety agreement, then the *Before you start* note.
+5. On first launch, read and accept the safety agreement, then the *Before you start* note, then choose **Start with tutorial** or **Start without tutorial**. You can change it later at Settings → Appearance → Tutorial → Tutorial mode.
 
 ## Verify
 
-SHA-256 of `Anubis-v5.2-release.apk`:
+SHA-256 of `Anubis-v5.3-release.apk`:
 
 ```
-25a214273fc358636c663e51d2f45fec9e75bfd507e88e0fee4d516c2ded86c7
+12761e15c530df64aa71039e2c171e4836b130c3a3fc5454021dd5837fa84d17
 ```
 
-- On a computer: `sha256sum Anubis-v5.2-release.apk` (Linux), `shasum -a 256 Anubis-v5.2-release.apk` (macOS), or `certutil -hashfile Anubis-v5.2-release.apk SHA256` (Windows).
+- On a computer: `sha256sum Anubis-v5.3-release.apk` (Linux), `shasum -a 256 Anubis-v5.3-release.apk` (macOS), or `certutil -hashfile Anubis-v5.3-release.apk SHA256` (Windows).
 - On Android: any file-hash app works.
 
 Release signing certificate (SHA-256): `7d01ca6bdf081381b817eb45e67fcb7ae114a501aa0cfcfc617bc76e01f55652`
-(check with `apksigner verify --print-certs Anubis-v5.2-release.apk`).
+(check with `apksigner verify --print-certs Anubis-v5.3-release.apk`).
 
 **Updates:** every release is signed with the same key, so a newer APK installs over the one you have and keeps your settings.
 
@@ -84,7 +84,7 @@ Requirements: JDK 17 or newer, the Android SDK with `platforms;android-36` and `
 
 ```bash
 export ANDROID_SDK=/path/to/android-sdk
-./build.sh                      # produces dist/Anubis-5.2-unsigned.apk
+./build.sh                      # produces dist/Anubis-5.3-unsigned.apk
 ```
 
 To sign with your own key:

@@ -911,6 +911,15 @@ html body.fitc [data-s=audio] .tport .tb{height:44px}
 <button class="btn wide p" type="button" id="safeNoteOk">Got it</button>
 </div>
 </div>
+<div class="safeNote" id="tutAsk" hidden>
+<div class="card" role="dialog" aria-modal="true" aria-labelledby="tutAskT">
+<h3 id="tutAskT">Tutorial mode</h3>
+<p>Tutorial mode shows a short tip the first time you open each screen. Start with it or without it?</p>
+<button class="btn wide p" type="button" id="tutAskOn">Start with tutorial</button>
+<button class="btn wide" type="button" id="tutAskOff">Start without tutorial</button>
+<p class="tutNote">Change it any time: ⚙ Settings → Appearance → Tutorial → Tutorial mode.</p>
+</div>
+</div>
 <div class="psheet" id="dropM" hidden><div class="psb"><div class="psh"><b id="dropT">Device reconnected</b></div><div class="fine" id="dropB">Resume ramps up through soft start. Reset starts at 0.</div><div class="row2"><button class="btn wide" id="dropReset">Reset to 0</button><button class="btn wide p" id="dropResume">Resume</button></div></div></div>
 <div class="psheet apop" id="aAdvP" hidden><div class="psb"><div class="psh"><b>Audio settings</b><button class="btn sm rst17" id="aAdvR">Default Settings</button><button class="btn sm" id="aAdvX">✕</button></div>
 <div class="pbody" id="aPbody">
@@ -2524,8 +2533,16 @@ const NOTE_VER='1';
 function noteNeeded(){return localStorage.getItem('coyote.safetyNote')!==NOTE_VER}
 function noteShow(readOnly){const n=$('safeNote'),ok=$('safeNoteOk');if(!n||!ok)return;n.hidden=false;ok.textContent=readOnly?'Close':'Got it';ok.dataset.ro=readOnly?1:0}
 function noteHide(){const n=$('safeNote');if(n)n.hidden=true}
-$('safeNoteOk').onclick=()=>{const ok=$('safeNoteOk'),ro=ok&&ok.dataset.ro==='1';if(!ro){try{localStorage.setItem('coyote.safetyNote',NOTE_VER)}catch(e){}}noteHide();if(!ro)tourSoon(900)};
+$('safeNoteOk').onclick=()=>{const ok=$('safeNoteOk'),ro=ok&&ok.dataset.ro==='1';if(!ro){try{localStorage.setItem('coyote.safetyNote',NOTE_VER)}catch(e){}}noteHide();if(!ro){if(tutAskNeeded())tutAskShow();else tourSoon(900)}};
 $('safeNoteRead').onclick=()=>noteShow(true);
+/* v5.3: first-run Tutorial mode choice, shown once right after the safety note (fresh installs only: anyone who already acknowledged the note is not asked).
+   'pending' while it is on screen, so it comes back if the app is closed before a choice; '1' once answered. */
+const TUTASK='coyote.tutAsk';
+function tutAskNeeded(){try{return localStorage.getItem(TUTASK)!=='1'}catch(e){return false}}
+function tutAskShow(){const t=$('tutAsk');if(!t)return;try{localStorage.setItem(TUTASK,'pending')}catch(e){}t.hidden=false}
+function tutAskDone(on){const st=tourLoad();st.off=!on;tourSave(st);tipsUI();try{localStorage.setItem(TUTASK,'1')}catch(e){}const t=$('tutAsk');if(t)t.hidden=true;
+ toast(on?'Tutorial mode on · tips show the first time you open a screen':'Tutorial mode off · turn it on in Settings → Appearance');if(on)tourSoon(900)}
+$('tutAskOn').onclick=()=>tutAskDone(true);$('tutAskOff').onclick=()=>tutAskDone(false);
 // ===== v4.6 walk-through: speech bubbles per control, first time each screen is selected =====
 const TOURK='coyote.tour';
 const tourLoad=()=>{try{const o=JSON.parse(localStorage.getItem(TOURK)||'{}')||{};return{off:!!o.off,seen:(o.seen&&typeof o.seen=='object')?o.seen:{}}}catch(e){return{off:false,seen:{}}}};
@@ -2590,7 +2607,7 @@ const TOURPROT='.dstop,#pauseBtn,#pauseB,#aiEnd,#statusPill';
 const tourVis=e=>!!e&&e.getClientRects().length>0&&getComputedStyle(e).visibility!='hidden'&&e.offsetWidth>4&&e.offsetHeight>4;
 const tourFind=sel=>[...document.querySelectorAll(sel)].find(tourVis);
 function tourKey(){if(cur=='live')return drive=='auto'?'auto':'live';return['draw','audio','patterns','trivia','remote','settings'].includes(cur)?cur:null}
-function tourOverlay(){return !!document.querySelector('#connModal.on,.psheet:not([hidden]),#safeGate:not([hidden]),#safeNote:not([hidden])')||document.body.classList.contains('locked')}
+function tourOverlay(){return !!document.querySelector('#connModal.on,.psheet:not([hidden]),#safeGate:not([hidden]),#safeNote:not([hidden]),#tutAsk:not([hidden])')||document.body.classList.contains('locked')}
 function tourIns(){const p=$('tourProbe'),c=getComputedStyle(p);return{t:parseFloat(c.paddingTop)||0,r:parseFloat(c.paddingRight)||0,b:parseFloat(c.paddingBottom)||0,l:parseFloat(c.paddingLeft)||0}}
 function tourSteps(key){const defs=TOURS[key]||[];const L=defs.map(d=>({d,el:tourFind(d.s)})).filter(o=>o.el);if(!L.length)return L;
  L.forEach(o=>{const r=o.el.getBoundingClientRect();o.x=r.x+r.width/2;o.y=r.y+r.height/2;o.l=r.x;o.t=r.y});
@@ -2682,7 +2699,7 @@ ctlUI();setInterval(ctlUI,150);
 // overlay permission uses native
 // phone audio uses native capture when live
 // boot gates
-setTimeout(()=>{demoUI();statusUI();pShufUI();if(safeNeeded())safeShow(false);else if(typeof noteNeeded==='function'&&noteNeeded())noteShow(false);else tourSoon(1000);
+setTimeout(()=>{demoUI();statusUI();pShufUI();if(safeNeeded())safeShow(false);else if(typeof noteNeeded==='function'&&noteNeeded())noteShow(false);else if(localStorage.getItem('coyote.tutAsk')==='pending')tutAskShow();else tourSoon(1000);
  if(!DEV.demo&&NATIVE){try{const r=NATIVE.remembered();const j=r&&r!=='null'?JSON.parse(r):null;if(j&&j.addr){DEV.addr=j.addr;DEV.name=j.name;$('pairInfo').textContent=j.name+' · '+j.addr;ncall('autoConnect',[])}}catch(e){}}},50);
 statusUI();setInterval(statusUI,2000);
 /* v4.9 demo build: the native clock (Java) is the authority; the page only shows the time left (feature-detected, absent in the normal build) */
@@ -7171,5 +7188,7 @@ setTimeout(eq,0);setTimeout(eq,50);setTimeout(eq,200);
 .safeNote .btn{margin-top:4px}
 @media (max-height:700px){.safeNote{padding:16px}.safeNote .card{padding:16px;gap:10px}.safeNote h3{font-size:16px}.safeNote p{font-size:13px;line-height:1.4}}
 @media (max-width:360px){.safeNote{padding:16px}.safeNote p{font-size:13px;line-height:1.4}}
+#tutAsk .card{gap:10px}#tutAsk .btn{margin-top:0}#tutAsk p.tutNote{font-size:12.5px;line-height:1.4;color:var(--dim,#8A8B9C)}
+@media (max-width:360px){#tutAsk p.tutNote{font-size:12px}}
 </style>
 </body></html>

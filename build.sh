@@ -27,8 +27,8 @@ export PATH="$BT:$PATH"
 
 PKG=com.anubis.app
 LABEL=Anubis
-VC=101
-VN=5.2
+VC=102
+VN=5.3
 B="$ROOT/build"
 rm -rf -- "$B"
 mkdir -p "$B/assets" "$B/classes" "$B/gen" "$B/dex" "$ROOT/dist"
