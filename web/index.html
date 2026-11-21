@@ -3107,11 +3107,11 @@ function gcPt(g,s){const {x0,y0,w,h,r}=g,L=w-2*r,H=h-2*r,q=Math.PI*r/2,P=2*L+2*H
 function gcGeom(b,c){const dpr=window.devicePixelRatio||1,w=b.clientWidth,h=b.clientHeight;if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr)}
  const br=parseFloat(getComputedStyle(b).borderTopLeftRadius)||h/2,i=GC.W/2,W=w-2*i,H=h-2*i,r=Math.min(br-i,H/2,W/2);
  const g={x0:i,y0:i,w:W,h:H,r,dpr};g.P=2*(W-2*r)+2*(H-2*r)+2*Math.PI*r;return g}
-function gcDraw(e,t){const {b,c,rev,lap}=e;if(b.hidden||!b.offsetParent)return;const g=gcGeom(b,c),x=c.getContext('2d'),P=g.P;
+function gcDraw(e,t){const {b,c,rev,lap,ph}=e;if(b.hidden||!b.offsetParent)return;const g=gcGeom(b,c),x=c.getContext('2d'),P=g.P;
  x.setTransform(g.dpr,0,0,g.dpr,0,0);x.clearRect(0,0,c.width,c.height);x.lineWidth=GC.W;x.lineJoin='round';
  x.strokeStyle=GC.GOLD;x.lineCap='butt';x.beginPath();for(let s=0;s<=P;s+=2){const p=gcPt(g,s);s?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])}x.closePath();x.stroke();
  if(!gcTraceOn())return;
- const head=((t%lap)/lap)*P*(rev?-1:1),dir=rev?1:-1,F=GC.HEAD+GC.FADE+GC.BLACK,TF=GC.TFADE,H=GC.HOT,seg=(d0,d1,col)=>{const p0=gcPt(g,head+dir*d0),pm=gcPt(g,head+dir*(d0+d1)/2),p1=gcPt(g,head+dir*d1);
+ const head=(((t+(ph||0)*lap)%lap)/lap)*P*(rev?-1:1),dir=rev?1:-1,F=GC.HEAD+GC.FADE+GC.BLACK,TF=GC.TFADE,H=GC.HOT,seg=(d0,d1,col)=>{const p0=gcPt(g,head+dir*d0),pm=gcPt(g,head+dir*(d0+d1)/2),p1=gcPt(g,head+dir*d1);
   x.strokeStyle=col;x.beginPath();x.moveTo(p0[0],p0[1]);x.quadraticCurveTo(2*pm[0]-(p0[0]+p1[0])/2,2*pm[1]-(p0[1]+p1[1])/2,p1[0],p1[1]);x.stroke()};
  x.lineWidth=GC.W+.4;
  seg(GC.HEAD+GC.FADE,F,'rgb(8,10,14)');
@@ -3125,8 +3125,9 @@ function gcLoop(){GC.raf=0;if(document.hidden)return;const t=GC.now(),trace=gcTr
  /* When the trace is off we still need one solid redraw once the buttons are on screen (toggle often happens from Settings). */
  if(trace&&motion)GC.raf=requestAnimationFrame(gcLoop);
  else if(GC.needSolid){const ready=GC.list.some(e=>e.b&&!e.b.hidden&&e.b.offsetParent);if(ready)GC.needSolid=false;else GC.raf=requestAnimationFrame(gcLoop)}}
-function gcRings(){[['aiStart',0,6400],['aiStartAB',1,7400],['gcA460',0,6400],['gcB460',1,7400]].forEach(([id,rev,lap])=>{const b=document.getElementById(id);if(!b||b.querySelector('.gcRing'))return;
- const c=document.createElement('canvas');c.className='gcRing';c.setAttribute('aria-hidden','true');b.appendChild(c);GC.list.push({b,c,rev,lap})});
+/* v5.2: A clockwise, B counter-clockwise and a quarter lap ahead, A&B clockwise at A's speed but half a lap off A, so no two traces move in lockstep. */
+function gcRings(){[['aiStart',0,6400,0],['aiStartAB',0,6400,.5],['gcA460',0,6400,0],['gcB460',1,7400,.25]].forEach(([id,rev,lap,ph])=>{const b=document.getElementById(id);if(!b||b.querySelector('.gcRing'))return;
+ const c=document.createElement('canvas');c.className='gcRing';c.setAttribute('aria-hidden','true');b.appendChild(c);GC.list.push({b,c,rev,lap,ph})});
  if(!GC.raf)GC.raf=requestAnimationFrame(gcLoop)}
 function gcSetTrace(on){try{localStorage.setItem('coyote.gcTrace',on?'1':'0')}catch(e){}
  if(GC.raf){cancelAnimationFrame(GC.raf);GC.raf=0}
