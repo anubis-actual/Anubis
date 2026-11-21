@@ -30,22 +30,26 @@ See the [overview deck](docs/deck/Anubis-Overview-v5.1.pdf) for screenshots and 
 Anubis is distributed as an APK on GitHub Releases, not through the Play Store.
 
 1. Open the [v5.1 release](https://github.com/anubis-actual/Anubis/releases/tag/v5.1) on your Android phone and download `Anubis-v5.1-release.apk`.
-2. **Verify the file** (recommended). Its SHA-256 must be:
-
-   ```
-   bbceb7a47e0536e3e023e5bd35094dac97687c68396e39982bc1e4820356565c
-   ```
-
-   - On a computer: `sha256sum Anubis-v5.1-release.apk` (Linux), `shasum -a 256 Anubis-v5.1-release.apk` (macOS), or `certutil -hashfile Anubis-v5.1-release.apk SHA256` (Windows).
-   - On Android: any file-hash app works.
+2. **Verify the file** (recommended). Checksums are in the [Verify](#verify) section below.
 3. **Allow installs from this source.** When you open the APK, Android asks for permission to install unknown apps from your browser or file manager. Allow it for that app (Settings → Apps → Special app access → Install unknown apps).
 4. Tap **Install**, then open Anubis. You can turn the "install unknown apps" permission back off afterwards.
 5. On first launch, read and accept the safety agreement, then the *Before you start* note.
 
-**Updates:** every release is signed with the same key, so a newer APK installs over the one you have and keeps your settings.
+## Verify
+
+SHA-256 of `Anubis-v5.1-release.apk`:
+
+```
+bbceb7a47e0536e3e023e5bd35094dac97687c68396e39982bc1e4820356565c
+```
+
+- On a computer: `sha256sum Anubis-v5.1-release.apk` (Linux), `shasum -a 256 Anubis-v5.1-release.apk` (macOS), or `certutil -hashfile Anubis-v5.1-release.apk SHA256` (Windows).
+- On Android: any file-hash app works.
 
 Release signing certificate (SHA-256): `7d01ca6bdf081381b817eb45e67fcb7ae114a501aa0cfcfc617bc76e01f55652`
 (check with `apksigner verify --print-certs Anubis-v5.1-release.apk`).
+
+**Updates:** every release is signed with the same key, so a newer APK installs over the one you have and keeps your settings.
 
 ## Safety note
 
