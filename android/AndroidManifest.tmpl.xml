@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="@@PKG@@" android:versionCode="100" android:versionName="5.1">
+<uses-sdk android:minSdkVersion="26" android:targetSdkVersion="36"/>
+<uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation"/>
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION"/>
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE"/>
+<uses-permission android:name="android.permission.WAKE_LOCK"/>
+<uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+<uses-permission android:name="android.permission.INTERNET"/>
+<uses-permission android:name="android.permission.CAMERA"/>
+@@PERMS@@<uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+<uses-feature android:name="android.hardware.camera" android:required="false"/>
+<application android:enableOnBackInvokedCallback="true" android:label="@@LABEL@@" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:theme="@style/AppTheme" @@BACKUP@@ android:usesCleartextTraffic="false">
+<activity android:name="com.anubis.app.MainActivity" android:exported="true" android:screenOrientation="portrait" android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density|fontScale|locale|layoutDirection|colorMode" android:launchMode="singleTask">
+<intent-filter><action android:name="android.intent.action.MAIN"/><category android:name="android.intent.category.LAUNCHER"/></intent-filter>
+</activity>
+<!-- exported=false; started only AFTER a Coyote is connected -->
+<service android:name="com.anubis.app.CoyoteService" android:exported="false" android:foregroundServiceType="connectedDevice"/>
+<!-- live audio analysis: Phone audio (mediaProjection) and Mic (microphone); started only after consent -->
+<service android:name="com.anubis.app.CaptureService" android:exported="false" android:foregroundServiceType="mediaProjection|microphone"/>
+<!-- v4.38: the invite QR image for Copy QR (read-only, not exported) -->
+<provider android:name="com.anubis.app.QrProvider" android:authorities="@@PKG@@.qr" android:exported="false" android:grantUriPermissions="true"/>
+</application>
+</manifest>

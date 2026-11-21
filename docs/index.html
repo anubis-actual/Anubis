@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0F16">
+<meta name="referrer" content="no-referrer">
+<title>Anubis · Android app for the DG-Lab Coyote 3</title>
+<meta name="description" content="Anubis is a free Android app for the DG-Lab Coyote 3 and Pawprints, with clear controls, hard limits and an always-on STOP.">
+<link rel="icon" href="assets/icon.png">
+<style>
+@font-face{font-family:'Uncial Antiqua';src:url(assets/UncialAntiqua.ttf) format('truetype');font-display:swap}
+:root{--accent:#E8A33D;--accent2:#F0B24A;--accent-rgb:232,163,61;--teal:#2A8FA3;--teal-rgb:42,143,163;--bg:#0A0F16;--bgGlow:#0F2230;--bgEdge:#05080C;--card:#101821;--raised:#131D28;--line:#1E2C3A;--text:#ECECF3;--text2:#C9C9D6;--dim:#8A8B9C;--ok:#7EE2B0;--stop:#D93838}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bgEdge);scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;background:radial-gradient(120% 60% at 50% 0%,var(--bgGlow) 0%,var(--bg) 55%,var(--bgEdge) 100%) no-repeat;min-height:100vh}
+a{color:var(--accent2)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header.top{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.brand img{width:36px;height:36px;border-radius:10px}
+.brand span{font-family:'Uncial Antiqua',Papyrus,fantasy;font-size:22px;letter-spacing:.5px}
+nav.links{display:flex;gap:18px;font-size:14px}
+nav.links a{color:var(--text2);text-decoration:none}
+nav.links a:hover{color:var(--accent2)}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:36px 0 56px}
+.kicker{color:var(--accent);font-size:13px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase}
+h1{font-family:'Uncial Antiqua',Papyrus,fantasy;font-weight:400;font-size:clamp(46px,8vw,76px);line-height:1.05;margin:10px 0 14px;color:var(--text)}
+.lede{font-size:18px;color:var(--text2);max-width:34em}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 14px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:999px;font-weight:700;font-size:16px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.p{background:linear-gradient(180deg,var(--accent2),var(--accent));color:#1a1206;box-shadow:0 8px 30px rgba(var(--accent-rgb),.28)}
+.btn.p:hover{filter:brightness(1.06)}
+.btn.s{background:var(--raised);color:var(--text);border:1px solid var(--line)}
+.btn.s:hover{border-color:rgba(var(--teal-rgb),.7)}
+.meta{font-size:13px;color:var(--dim)}
+.phone{justify-self:center;width:min(300px,78vw);aspect-ratio:412/809;border-radius:34px;padding:8px;background:#05080c;border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 6px rgba(var(--teal-rgb),.08)}
+.phone img{width:100%;height:100%;object-fit:cover;border-radius:27px;display:block}
+section{padding:48px 0;border-top:1px solid rgba(30,44,58,.6)}
+h2{font-size:28px;font-weight:700;letter-spacing:-.4px;margin-bottom:6px}
+.sub{color:var(--dim);margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px}
+.card h3{font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.card p{font-size:14px;color:var(--text2)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--teal);flex:none}
+.card.gold .dot{background:var(--accent)}
+.shots{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.shots figure{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:8px}
+.shots img{width:100%;height:auto;aspect-ratio:412/809;object-fit:cover;border-radius:16px;display:block}
+.shots figcaption{text-align:center;font-size:13px;color:var(--dim);padding:8px 0 2px}
+.hash{display:flex;gap:10px;align-items:center;background:var(--raised);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin:10px 0 6px}
+.hash code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;color:var(--ok);word-break:break-all;flex:1}
+.copy{background:rgba(var(--teal-rgb),.18);color:var(--text);border:0;border-radius:10px;padding:8px 12px;font:600 13px inherit;font-family:inherit;cursor:pointer;flex:none}
+ol.steps{counter-reset:s;list-style:none;display:grid;gap:12px}
+ol.steps li{counter-increment:s;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px 16px 16px 62px;position:relative;color:var(--text2);font-size:15px}
+ol.steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:18px;top:14px;color:var(--teal);font-weight:700;font-size:18px}
+ol.steps b{color:var(--text)}
+pre.cmd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;background:#0b121a;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;color:var(--text2);overflow-x:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
+.note{background:linear-gradient(180deg,rgba(var(--accent-rgb),.10),rgba(var(--accent-rgb),.04));border:1px solid rgba(var(--accent-rgb),.35);border-radius:22px;padding:22px}
+.note h3{font-size:20px;margin-bottom:10px}
+.note p{color:var(--text);margin-bottom:10px;font-size:15px}
+.stoppill{display:inline-block;background:linear-gradient(180deg,var(--accent2),var(--accent));color:#1a1206;font-weight:800;letter-spacing:2px;border-radius:999px;padding:3px 14px;font-size:13px}
+.deck{display:flex;flex-wrap:wrap;gap:12px}
+footer{padding:36px 0 48px;color:var(--dim);font-size:13px;border-top:1px solid rgba(30,44,58,.6)}
+footer p{margin-bottom:6px}
+@media (max-width:860px){
+ .hero{grid-template-columns:1fr;gap:28px;padding-top:16px}
+ .phone{width:min(260px,70vw)}
+ .grid{grid-template-columns:1fr 1fr}
+ .shots{grid-template-columns:1fr 1fr}
+ .two{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+ nav.links{display:none}
+ .grid{grid-template-columns:1fr}
+ .lede{font-size:16px}
+ .btn{width:100%;justify-content:center}
+ section{padding:36px 0}
+ h2{font-size:24px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+ <a class="brand" href="#"><img src="assets/icon.png" alt=""><span>Anubis</span></a>
+ <nav class="links"><a href="#features">Features</a><a href="#install">Install</a><a href="#safety">Safety</a><a href="#deck">Deck</a><a href="https://github.com/anubis-actual/Anubis">Source</a></nav>
+</header>
+
+<div class="hero">
+ <div>
+  <div class="kicker">Android app · v5.1</div>
+  <h1>Anubis</h1>
+  <p class="lede">A free Android app for the DG-Lab Coyote 3 and Pawprints wireless buttons. Clear controls, live readouts, hard limits on every channel, and a STOP that is always one tap away.</p>
+  <div class="cta">
+   <a class="btn p" href="https://github.com/anubis-actual/Anubis/releases/tag/v5.1">&#11015; Download v5.1 APK</a>
+   <a class="btn s" href="#install">How to install</a>
+  </div>
+  <div class="meta">Android 8.0 or newer · Bluetooth LE · Free · Not on the Play Store</div>
+ </div>
+ <div class="phone"><img src="assets/screens/live.webp" alt="Anubis main screen with channel A and B dial, levels and the STOP bar" width="412" height="809"></div>
+</div>
+
+<section id="features">
+ <h2>What it does</h2>
+ <p class="sub">Everything runs under your limits. STOP always wins.</p>
+ <div class="grid">
+  <div class="card gold"><h3><i class="dot"></i>Always-on STOP</h3><p>The gold STOP stops both channels and every mode at once. A press of either Coyote dial does the same. Optional volume-key STOP.</p></div>
+  <div class="card gold"><h3><i class="dot"></i>Max Output per channel</h3><p>A cap for A and B. Auto, games, Remote and Pawprints never go above it. Soft start ramps up gently.</p></div>
+  <div class="card"><h3><i class="dot"></i>Live and Manual</h3><p>Level dial with live output, Max Output lines on the graph, Ramp and Sweep per channel, and Link for A and B together.</p></div>
+  <div class="card"><h3><i class="dot"></i>Auto and Patterns</h3><p>Eight Auto profiles with tile settings. Pattern library, step builder and sketching, plus DG-LAB .pulse and .zip import.</p></div>
+  <div class="card"><h3><i class="dot"></i>Draw and Audio</h3><p>Paint output with one or two fingers, record and loop. Or let a file, your phone's audio or the mic drive it.</p></div>
+  <div class="card"><h3><i class="dot"></i>Pawprints and games</h3><p>Connect up to six Pawprint buttons and map presses, holds and tilts with rules. Play Dot Chase or Trivia.</p></div>
+  <div class="card"><h3><i class="dot"></i>Partner remote</h3><p>One-on-one by one-time code or QR. You approve each partner; your Max Output holds and your STOP wins.</p></div>
+  <div class="card"><h3><i class="dot"></i>Overlay</h3><p>A floating bubble with live levels and STOP over other apps. Output keeps running in the background.</p></div>
+  <div class="card"><h3><i class="dot"></i>Built for troubleshooting</h3><p>Guided connect, plus a Coyote Bluetooth log you can copy or share from Settings.</p></div>
+ </div>
+</section>
+
+<section id="screens">
+ <h2>A look inside</h2>
+ <p class="sub">Screens from Anubis v5.1.</p>
+ <div class="shots">
+  <figure><img src="assets/screens/live.webp" alt="Live screen" loading="lazy" width="412" height="809"><figcaption>Live · Manual</figcaption></figure>
+  <figure><img src="assets/screens/patterns.webp" alt="Patterns library" loading="lazy" width="412" height="809"><figcaption>Patterns</figcaption></figure>
+  <figure><img src="assets/screens/settings.webp" alt="Settings categories" loading="lazy" width="412" height="809"><figcaption>Settings</figcaption></figure>
+  <figure><img src="assets/screens/safety-note.webp" alt="Before you start safety note" loading="lazy" width="412" height="809"><figcaption>First-run safety note</figcaption></figure>
+ </div>
+</section>
+
+<section id="install">
+ <div class="two">
+  <div>
+   <h2>Install</h2>
+   <p class="sub">Anubis is sideloaded from GitHub Releases.</p>
+   <ol class="steps">
+    <li><b>Download</b> <code>Anubis-v5.1-release.apk</code> from the <a href="https://github.com/anubis-actual/Anubis/releases/tag/v5.1">v5.1 release</a> on your phone.</li>
+    <li><b>Verify the file</b> (recommended). Its SHA-256 must match the value on this page.
+     <pre class="cmd">sha256sum Anubis-v5.1-release.apk</pre></li>
+    <li><b>Allow installs from this source.</b> When you open the APK, Android asks to let your browser or file app install unknown apps. Allow it (Settings → Apps → Special app access → Install unknown apps). You can turn it off again afterwards.</li>
+    <li><b>Tap Install</b>, open Anubis, then read and accept the safety agreement and the <i>Before you start</i> note.</li>
+   </ol>
+  </div>
+  <div>
+   <h2>Verify</h2>
+   <p class="sub">SHA-256 of Anubis-v5.1-release.apk</p>
+   <div class="hash"><code id="sha">bbceb7a47e0536e3e023e5bd35094dac97687c68396e39982bc1e4820356565c</code><button class="copy" id="copyBtn" type="button">Copy</button></div>
+   <p class="meta">Version 5.1 (100) · 952,084 bytes · package com.anubis.app</p>
+   <p class="meta" style="margin-top:14px">Signing certificate SHA-256:<br><code style="font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--text2);word-break:break-all">7d01ca6bdf081381b817eb45e67fcb7ae114a501aa0cfcfc617bc76e01f55652</code></p>
+   <p class="meta" style="margin-top:14px">Every release is signed with the same key, so new versions install over the one you have and keep your settings.</p>
+  </div>
+ </div>
+</section>
+
+<section id="safety">
+ <div class="two">
+  <div class="note">
+   <h3>Before you start</h3>
+   <p>Start at the lowest strength and increase slowly so you can feel how it lands.</p>
+   <p>Keep electrodes below the waist and off the chest. Don't use this with a pacemaker or other implanted device, or on broken or irritated skin, and don't use it in water, while driving or operating machinery, or while you're asleep.</p>
+   <p>The gold STOP button, or a press of either Coyote dial, cuts output immediately.</p>
+  </div>
+  <div>
+   <h2>Safety</h2>
+   <p class="sub">The same note appears in the app on first run.</p>
+   <p style="color:var(--text2);margin-bottom:12px">On first launch Anubis asks you to accept an eight-item safety agreement, then shows this note. You can read it again any time at Settings → Data → Safety → Safety note.</p>
+   <p style="color:var(--text2)"><span class="stoppill">STOP</span>&nbsp; stops both channels and every mode, and it is always on screen.</p>
+  </div>
+ </div>
+</section>
+
+<section id="deck">
+ <h2>Overview deck</h2>
+ <p class="sub">A 15-slide tour of Anubis v5.1.</p>
+ <div class="deck">
+  <a class="btn s" href="deck/Anubis-Overview-v5.1.pdf">Overview deck (PDF)</a>
+  <a class="btn s" href="deck/Anubis-Overview-v5.1.pptx">Overview deck (PPTX)</a>
+  <a class="btn s" href="https://github.com/anubis-actual/Anubis">Source on GitHub</a>
+ </div>
+</section>
+
+<footer>
+ <p>Anubis is an independent project and is not affiliated with, endorsed by, or supported by DG-Lab. DG-Lab, Coyote and Pawprints are names of their respective owners, used only to describe compatibility.</p>
+ <p>Use at your own risk and follow the device manufacturer's safety instructions. This site uses no cookies, analytics or trackers.</p>
+</footer>
+</div>
+<script>
+document.getElementById('copyBtn').addEventListener('click',function(){
+ var b=this,t=document.getElementById('sha').textContent;
+ function done(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500)}
+ if(navigator.clipboard){navigator.clipboard.writeText(t).then(done,function(){})}
+});
+</script>
+</body>
+</html>

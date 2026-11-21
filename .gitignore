@@ -1,0 +1,35 @@
+# Build output
+build/
+dist/
+out*/
+*.apk
+*.aab
+*.idsig
+*.dex
+*.class
+
+# Signing material: never commit
+*.jks
+*.keystore
+*.p12
+*.pem
+*.key
+keystore*.txt
+*password*
+signing.properties
+local.properties
+
+# Backups and editor/OS clutter
+*.bak
+*.bak-*
+*~
+*.swp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Office lock files
+~$*
+.~lock.*
